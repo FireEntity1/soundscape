@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=3 uid="uid://c1leqgnp5o7sh"]
+
+[ext_resource type="Script" path="res://openFile.gd" id="1_nww2s"]
+
+[sub_resource type="Theme" id="Theme_6w4j0"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Button" type="Button" parent="."]
+offset_left = 321.0
+offset_top = 226.0
+offset_right = 878.0
+offset_bottom = 507.0
+theme = SubResource("Theme_6w4j0")
+theme_override_font_sizes/font_size = 200
+text = "OPEN"
+script = ExtResource("1_nww2s")
+
+[node name="fileOpen" type="FileDialog" parent="Button"]
+title = "Open a File"
+initial_position = 1
+size = Vector2i(392, 300)
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+use_native_dialog = true
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="Button"]
+
+[connection signal="button_up" from="Button" to="Button" method="_on_button_up"]
+[connection signal="file_selected" from="Button/fileOpen" to="Button" method="_on_file_open_file_selected"]
