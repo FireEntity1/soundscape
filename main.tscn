@@ -17,15 +17,16 @@ text = "OPEN"
 script = ExtResource("1_nww2s")
 
 [node name="fileOpen" type="FileDialog" parent="Button"]
-title = "Open a File"
+title = "Open a Directory"
 initial_position = 1
 size = Vector2i(392, 300)
-ok_button_text = "Open"
-file_mode = 0
+ok_button_text = "Select Current Folder"
+file_mode = 2
 access = 2
 use_native_dialog = true
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="Button"]
 
 [connection signal="button_up" from="Button" to="Button" method="_on_button_up"]
+[connection signal="dir_selected" from="Button/fileOpen" to="Button" method="_on_file_open_dir_selected"]
 [connection signal="file_selected" from="Button/fileOpen" to="Button" method="_on_file_open_file_selected"]
