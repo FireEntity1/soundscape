@@ -3,12 +3,20 @@ extends Button
 var songs = []
 var index = 0
 var pos = 0
+var current = [" "]
 
 func _ready():
 	pass
 
 func _process(delta):
-	pass
+	if songs.size() > 0:
+		current = (songs[index].split("/"))
+		$playing.text = current[current.size()-1]
+	if $AudioStreamPlayer2D.playing:
+		$cursor.max_value = $AudioStreamPlayer2D.stream.get_length()
+		$cursor.value = $AudioStreamPlayer2D.get_playback_position()
+		$total.text = str(int($AudioStreamPlayer2D.stream.get_length()))
+		$done.text = str(int($AudioStreamPlayer2D.get_playback_position()))
 
 
 func _on_file_open_file_selected(path):
@@ -61,6 +69,7 @@ func _on_back_button_up():
 func load_ogg(path):
 	$AudioStreamPlayer2D.stream = AudioStreamOggVorbis.load_from_file(path)
 	$AudioStreamPlayer2D.play()
+	$pause.text = "⏸︎"
 
 func load_mp3(path):
 	var file = FileAccess.open(path, FileAccess.READ)
@@ -68,6 +77,7 @@ func load_mp3(path):
 	sound.data = file.get_buffer(file.get_length())
 	$AudioStreamPlayer2D.stream = sound
 	$AudioStreamPlayer2D.play()
+	$pause.text = "⏸︎"
 
 
 func _on_pause_button_up():
@@ -78,4 +88,11 @@ func _on_pause_button_up():
 	else:
 		$AudioStreamPlayer2D.play(pos)
 		$pause.text = "⏸︎"
-		#AudioStreamPlayer2D.seek(pos)
+
+
+func _on_forward_button_up():
+	$AudioStreamPlayer2D.play($AudioStreamPlayer2D.get_playback_position()+10)
+
+
+func _on_rewind_button_up():
+	$AudioStreamPlayer2D.play($AudioStreamPlayer2D.get_playback_position()-10)
