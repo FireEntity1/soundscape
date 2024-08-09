@@ -8,6 +8,12 @@ var spectrum_analyzer: AudioEffectSpectrumAnalyzerInstance
 var bus_index = AudioServer.get_bus_index("Master")
 var effect = AudioEffectSpectrumAnalyzer.new()
 var bass = 0
+var advance = true
+var playing
+
+# Settings
+var visualize = true
+var shuffle = false
 
 func _ready():
 	AudioServer.add_bus_effect(bus_index, effect)
@@ -16,15 +22,16 @@ func _process(delta):
 	if songs.size() > 0:
 		current = (songs[index].split("/"))
 		$playing.text = current[current.size()-1]
-	if $AudioStreamPlayer2D.playing:
+	if $AudioStreamPlayer2D.playing and advance == true:
 		$cursor.max_value = $AudioStreamPlayer2D.stream.get_length()
 		$cursor.value = $AudioStreamPlayer2D.get_playback_position()
 		$total.text = str(int($AudioStreamPlayer2D.stream.get_length()))
 		$done.text = str(int($AudioStreamPlayer2D.get_playback_position()))
 		
 		spectrum_analyzer = AudioServer.get_bus_effect_instance(bus_index, 0)
-		bass = (spectrum_analyzer.get_magnitude_for_frequency_range(0,250).x + spectrum_analyzer.get_magnitude_for_frequency_range(0,250).y)/2
-		print(bass)
+		bass = (spectrum_analyzer.get_magnitude_for_frequency_range(20,80).x + spectrum_analyzer.get_magnitude_for_frequency_range(20,80).y)/2
+
+		if visualize: $modulate.color = Color(1,1-(bass*1.5),1,1)
 	
 	$AudioStreamPlayer2D.volume_db = $vol.value
 
@@ -50,8 +57,10 @@ func dir_contents(path):
 			file_name = dir.get_next()
 		if songs[0].ends_with(".mp3"):
 			load_mp3(songs[index])
-		else:
+		elif songs[0].ends_with(".ogg"):
 			load_ogg(songs[index])
+		else:
+			print("ERROR")
 	else:
 		print("An error occurred when trying to access the path.")
 
@@ -62,21 +71,35 @@ func _on_file_open_dir_selected(dir):
 
 func _on_skip_button_up():
 	if songs.size() > 0:
-		index += 1
-		index = clamp(index,0,songs.size() -1)
-		if songs[index].ends_with(".mp3"):
-			load_mp3(songs[index])
-		else:
-			load_ogg(songs[index])
+		if shuffle == false:
+			index += 1
+			index = clamp(index,0,songs.size() -1)
+			if songs[index].ends_with(".mp3"):
+				load_mp3(songs[index])
+			else:
+				load_ogg(songs[index])
+		elif shuffle:
+			index = randi_range(0,songs.size()-1)
+			if songs[index].ends_with(".mp3"):
+				load_mp3(songs.pick_random())
+			else:
+				load_ogg(songs.pick_random())
 
 func _on_back_button_up():
 	if songs.size() > 0:
-		index -= 1
-		index = clamp(index,0,songs.size() -1)
-		if songs[index].ends_with(".mp3"):
-			load_mp3(songs[index])
-		else:
-			load_ogg(songs[index])
+		if shuffle == false:
+			index -= 1
+			index = clamp(index,0,songs.size() -1)
+			if songs[index].ends_with(".mp3"):
+				load_mp3(songs[index])
+			else:
+				load_ogg(songs[index])
+		elif shuffle:
+			index = randi_range(0,songs.size()-1)
+			if songs[index].ends_with(".mp3"):
+				load_mp3(songs.pick_random())
+			else:
+				load_ogg(songs.pick_random())
 
 func load_ogg(path):
 	$AudioStreamPlayer2D.stream = AudioStreamOggVorbis.load_from_file(path)
@@ -116,3 +139,31 @@ func _on_close_button_up():
 
 func _on_vol_drag_ended(value_changed):
 	pass
+
+
+func _on_cursor_drag_started():
+	advance = false
+
+
+func _on_cursor_drag_ended(value_changed):
+	$AudioStreamPlayer2D.play($cursor.value)
+	advance = true
+
+
+func _on_settings_button_button_up():
+	$settings.show()
+
+
+func _on_settings_id_pressed(id):
+	$settings.toggle_item_checked(id)
+	match id:
+		0:
+			if visualize == false:
+				visualize = true
+			else: 
+				visualize = false
+		1:
+			if shuffle == false:
+				shuffle = true
+			else:
+				shuffle = false

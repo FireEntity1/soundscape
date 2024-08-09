@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://c1leqgnp5o7sh"]
+[gd_scene load_steps=9 format=3 uid="uid://c1leqgnp5o7sh"]
 
 [ext_resource type="Script" path="res://Control.gd" id="1_g5o7u"]
 [ext_resource type="Script" path="res://openFile.gd" id="1_nww2s"]
@@ -12,6 +12,8 @@
 [sub_resource type="Theme" id="Theme_8odsd"]
 
 [sub_resource type="Theme" id="Theme_cqwpe"]
+
+[sub_resource type="Theme" id="Theme_maojn"]
 
 [node name="Node2D" type="Node2D"]
 
@@ -148,12 +150,12 @@ text = "/"
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="cursor" type="ProgressBar" parent="open"]
+[node name="cursor" type="HSlider" parent="open"]
+layout_mode = 0
 offset_left = -364.0
 offset_top = 392.0
 offset_right = 39.0
-offset_bottom = 419.0
-show_percentage = false
+offset_bottom = 416.0
 
 [node name="close" type="Button" parent="open"]
 layout_mode = 0
@@ -177,6 +179,34 @@ max_value = 10.0
 scrollable = false
 tick_count = 3
 
+[node name="modulate" type="CanvasModulate" parent="open"]
+position = Vector2(-484, -12)
+
+[node name="settings" type="PopupMenu" parent="open"]
+initial_position = 4
+size = Vector2i(200, 300)
+theme_override_font_sizes/font_size = 25
+hide_on_item_selection = false
+hide_on_checkable_item_selection = false
+item_count = 2
+item_0/text = "Visualize"
+item_0/checkable = 1
+item_0/checked = true
+item_0/id = 0
+item_1/text = "Shuffle"
+item_1/checkable = 1
+item_1/id = 1
+
+[node name="settingsButton" type="Button" parent="open"]
+layout_mode = 0
+offset_left = -393.0
+offset_top = -4.0
+offset_right = -325.0
+offset_bottom = 60.0
+theme = SubResource("Theme_maojn")
+theme_override_font_sizes/font_size = 35
+text = "⚙"
+
 [connection signal="gui_input" from="Control" to="Control" method="_on_gui_input"]
 [connection signal="button_up" from="open" to="open" method="_on_button_up"]
 [connection signal="dir_selected" from="open/fileOpen" to="open" method="_on_file_open_dir_selected"]
@@ -186,5 +216,8 @@ tick_count = 3
 [connection signal="button_up" from="open/back" to="open" method="_on_back_button_up"]
 [connection signal="button_up" from="open/rewind" to="open" method="_on_rewind_button_up"]
 [connection signal="button_up" from="open/forward" to="open" method="_on_forward_button_up"]
+[connection signal="drag_ended" from="open/cursor" to="open" method="_on_cursor_drag_ended"]
+[connection signal="drag_started" from="open/cursor" to="open" method="_on_cursor_drag_started"]
 [connection signal="button_up" from="open/close" to="open" method="_on_close_button_up"]
-[connection signal="drag_ended" from="open/vol" to="open" method="_on_vol_drag_ended"]
+[connection signal="id_pressed" from="open/settings" to="open" method="_on_settings_id_pressed"]
+[connection signal="button_up" from="open/settingsButton" to="open" method="_on_settings_button_button_up"]
