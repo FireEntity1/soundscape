@@ -1,8 +1,14 @@
-[gd_scene load_steps=10 format=3 uid="uid://c1leqgnp5o7sh"]
+[gd_scene load_steps=16 format=3 uid="uid://c1leqgnp5o7sh"]
 
 [ext_resource type="Script" path="res://Control.gd" id="1_g5o7u"]
 [ext_resource type="Script" path="res://openFile.gd" id="1_nww2s"]
 [ext_resource type="Script" path="res://Color.gd" id="1_wk1k7"]
+[ext_resource type="Texture2D" uid="uid://dyot2qsjwl31j" path="res://paused.png" id="4_4u8p0"]
+[ext_resource type="Texture2D" uid="uid://ccgkbheg5va11" path="res://forward.png" id="4_mh2vv"]
+[ext_resource type="Texture2D" uid="uid://deqhi3orb7vjr" path="res://forwardHov.png" id="5_4t5g1"]
+[ext_resource type="Texture2D" uid="uid://hhdsbsxf2ipi" path="res://backward.png" id="6_51l04"]
+[ext_resource type="Texture2D" uid="uid://ctwsdsfjb2ljl" path="res://pausedHov.png" id="7_ly4dl"]
+[ext_resource type="Texture2D" uid="uid://3olp64rykmc5" path="res://backwardHov.png" id="8_1c7ul"]
 
 [sub_resource type="Theme" id="Theme_6w4j0"]
 
@@ -36,7 +42,7 @@ script = ExtResource("1_g5o7u")
 [node name="open" type="Button" parent="."]
 offset_left = 484.0
 offset_top = 12.0
-offset_right = 629.0
+offset_right = 632.0
 offset_bottom = 89.0
 theme = SubResource("Theme_6w4j0")
 theme_override_font_sizes/font_size = 50
@@ -54,55 +60,38 @@ use_native_dialog = true
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="open"]
 
-[node name="skip" type="Button" parent="open"]
+[node name="skip" type="TextureButton" parent="open"]
 layout_mode = 0
-offset_left = -2.0
-offset_top = 517.0
-offset_right = 142.0
-offset_bottom = 613.0
+offset_left = -49.0
+offset_top = 479.0
+offset_right = 91.0
+offset_bottom = 607.0
+rotation = 0.0528407
 theme = SubResource("Theme_q3f88")
-theme_override_font_sizes/font_size = 50
-text = ">"
+texture_normal = ExtResource("4_mh2vv")
+texture_hover = ExtResource("5_4t5g1")
 
-[node name="pause" type="Button" parent="open"]
+[node name="pause" type="TextureButton" parent="open"]
 layout_mode = 0
 offset_left = -230.0
-offset_top = 477.0
+offset_top = 475.0
 offset_right = -86.0
-offset_bottom = 597.0
+offset_bottom = 613.0
 theme = SubResource("Theme_q3f88")
-theme_override_font_sizes/font_size = 75
-text = "⏸︎"
+texture_normal = ExtResource("4_4u8p0")
+texture_hover = ExtResource("7_ly4dl")
+stretch_mode = 3
 
-[node name="back" type="Button" parent="open"]
+[node name="back" type="TextureButton" parent="open"]
 layout_mode = 0
-offset_left = -457.0
-offset_top = 516.0
-offset_right = -313.0
-offset_bottom = 612.0
+offset_left = -401.0
+offset_top = 478.0
+offset_right = -257.0
+offset_bottom = 606.0
+rotation = 0.0743835
 theme = SubResource("Theme_q3f88")
-theme_override_font_sizes/font_size = 50
-text = "<"
-
-[node name="rewind" type="Button" parent="open"]
-layout_mode = 0
-offset_left = -448.0
-offset_top = 384.0
-offset_right = -391.0
-offset_bottom = 427.0
-theme = SubResource("Theme_q3f88")
-theme_override_font_sizes/font_size = 25
-text = "<10"
-
-[node name="forward" type="Button" parent="open"]
-layout_mode = 0
-offset_left = 66.0
-offset_top = 386.0
-offset_right = 123.0
-offset_bottom = 429.0
-theme = SubResource("Theme_q3f88")
-theme_override_font_sizes/font_size = 25
-text = "10>"
+texture_normal = ExtResource("6_51l04")
+texture_hover = ExtResource("8_1c7ul")
 
 [node name="playing" type="Label" parent="open"]
 layout_mode = 0
@@ -154,10 +143,12 @@ autowrap_mode = 3
 
 [node name="cursor" type="HSlider" parent="open"]
 layout_mode = 0
-offset_left = -364.0
-offset_top = 392.0
-offset_right = 39.0
+offset_left = -428.0
+offset_top = 346.0
+offset_right = 103.0
 offset_bottom = 416.0
+tick_count = 2
+ticks_on_borders = true
 
 [node name="close" type="Button" parent="open"]
 layout_mode = 0
@@ -232,7 +223,7 @@ offset_right = -325.0
 offset_bottom = 60.0
 theme = SubResource("Theme_maojn")
 theme_override_font_sizes/font_size = 35
-text = "⚙"
+text = "o"
 
 [connection signal="gui_input" from="Control" to="Control" method="_on_gui_input"]
 [connection signal="button_up" from="open" to="open" method="_on_button_up"]
@@ -243,8 +234,6 @@ text = "⚙"
 [connection signal="button_up" from="open/skip" to="open" method="_on_skip_button_up"]
 [connection signal="button_up" from="open/pause" to="open" method="_on_pause_button_up"]
 [connection signal="button_up" from="open/back" to="open" method="_on_back_button_up"]
-[connection signal="button_up" from="open/rewind" to="open" method="_on_rewind_button_up"]
-[connection signal="button_up" from="open/forward" to="open" method="_on_forward_button_up"]
 [connection signal="drag_ended" from="open/cursor" to="open" method="_on_cursor_drag_ended"]
 [connection signal="drag_started" from="open/cursor" to="open" method="_on_cursor_drag_started"]
 [connection signal="button_up" from="open/close" to="open" method="_on_close_button_up"]

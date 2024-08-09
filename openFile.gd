@@ -36,7 +36,8 @@ func _process(delta):
 
 		if visualize: $pulse.color = Color(1-(bass*1.5),1-(bass*1.5),1-(bass*1.5),1)
 		else: $pulse.color = Color(1,1,1,1)
-	
+	elif advance == false:
+		$done.text = str(int($cursor.value))
 	$AudioStreamPlayer2D.volume_db = $vol.value
 
 
@@ -111,7 +112,8 @@ func _on_back_button_up():
 func load_ogg(path):
 	$AudioStreamPlayer2D.stream = AudioStreamOggVorbis.load_from_file(path)
 	$AudioStreamPlayer2D.play()
-	$pause.text = "⏸︎"
+	$pause.texture_normal = load("res://play.png")
+	$pause.texture_hover = load("res://playHov.png")
 
 func load_mp3(path):
 	var file = FileAccess.open(path, FileAccess.READ)
@@ -119,17 +121,21 @@ func load_mp3(path):
 	sound.data = file.get_buffer(file.get_length())
 	$AudioStreamPlayer2D.stream = sound
 	$AudioStreamPlayer2D.play()
-	$pause.text = "⏸︎"
+	$pause.texture_normal = load("res://play.png")
+	$pause.texture_hover = load("res://playHov.png")
 
 
 func _on_pause_button_up():
 	if $AudioStreamPlayer2D.playing:
 		pos = $AudioStreamPlayer2D.get_playback_position()
 		$AudioStreamPlayer2D.stop()
-		$pause.text = "▶"
+		$pause.texture_normal = load("res://paused.png")
+		$pause.texture_hover = load("res://pausedHov.png")
 	else:
 		$AudioStreamPlayer2D.play(pos)
-		$pause.text = "⏸︎"
+		$pause.texture_normal = load("res://play.png")
+		$pause.texture_hover = load("res://playHov.png")
+		
 
 
 func _on_forward_button_up():
