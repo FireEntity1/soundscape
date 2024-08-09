@@ -1,5 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://c1leqgnp5o7sh"]
+[gd_scene load_steps=8 format=3 uid="uid://c1leqgnp5o7sh"]
 
+[ext_resource type="Script" path="res://Control.gd" id="1_g5o7u"]
 [ext_resource type="Script" path="res://openFile.gd" id="1_nww2s"]
 
 [sub_resource type="Theme" id="Theme_6w4j0"]
@@ -7,6 +8,10 @@
 [sub_resource type="Theme" id="Theme_q3f88"]
 
 [sub_resource type="Theme" id="Theme_8qcvw"]
+
+[sub_resource type="Theme" id="Theme_8odsd"]
+
+[sub_resource type="Theme" id="Theme_cqwpe"]
 
 [node name="Node2D" type="Node2D"]
 
@@ -17,7 +22,14 @@ offset_right = 649.0
 offset_bottom = 645.0
 color = Color(0.149205, 0.168383, 0.187543, 1)
 
-[node name="Button" type="Button" parent="."]
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 649.0
+offset_bottom = 645.0
+script = ExtResource("1_g5o7u")
+
+[node name="open" type="Button" parent="."]
 offset_left = 484.0
 offset_top = 12.0
 offset_right = 629.0
@@ -27,7 +39,7 @@ theme_override_font_sizes/font_size = 50
 text = "OPEN"
 script = ExtResource("1_nww2s")
 
-[node name="fileOpen" type="FileDialog" parent="Button"]
+[node name="fileOpen" type="FileDialog" parent="open"]
 title = "Open a Directory"
 initial_position = 1
 size = Vector2i(392, 300)
@@ -36,9 +48,9 @@ file_mode = 2
 access = 2
 use_native_dialog = true
 
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="Button"]
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="open"]
 
-[node name="skip" type="Button" parent="Button"]
+[node name="skip" type="Button" parent="open"]
 layout_mode = 0
 offset_left = -2.0
 offset_top = 517.0
@@ -48,7 +60,7 @@ theme = SubResource("Theme_q3f88")
 theme_override_font_sizes/font_size = 50
 text = ">"
 
-[node name="pause" type="Button" parent="Button"]
+[node name="pause" type="Button" parent="open"]
 layout_mode = 0
 offset_left = -230.0
 offset_top = 477.0
@@ -58,7 +70,7 @@ theme = SubResource("Theme_q3f88")
 theme_override_font_sizes/font_size = 75
 text = "⏸︎"
 
-[node name="back" type="Button" parent="Button"]
+[node name="back" type="Button" parent="open"]
 layout_mode = 0
 offset_left = -457.0
 offset_top = 516.0
@@ -68,7 +80,7 @@ theme = SubResource("Theme_q3f88")
 theme_override_font_sizes/font_size = 50
 text = "<"
 
-[node name="rewind" type="Button" parent="Button"]
+[node name="rewind" type="Button" parent="open"]
 layout_mode = 0
 offset_left = -448.0
 offset_top = 384.0
@@ -78,7 +90,7 @@ theme = SubResource("Theme_q3f88")
 theme_override_font_sizes/font_size = 25
 text = "<10"
 
-[node name="forward" type="Button" parent="Button"]
+[node name="forward" type="Button" parent="open"]
 layout_mode = 0
 offset_left = 66.0
 offset_top = 386.0
@@ -88,11 +100,11 @@ theme = SubResource("Theme_q3f88")
 theme_override_font_sizes/font_size = 25
 text = "10>"
 
-[node name="playing" type="Label" parent="Button"]
+[node name="playing" type="Label" parent="open"]
 layout_mode = 0
-offset_left = -458.0
+offset_left = -395.0
 offset_top = 221.0
-offset_right = 137.0
+offset_right = 65.0
 offset_bottom = 383.0
 theme = SubResource("Theme_8qcvw")
 theme_override_font_sizes/font_size = 30
@@ -100,7 +112,7 @@ text = "Load a song"
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="total" type="Label" parent="Button"]
+[node name="total" type="Label" parent="open"]
 layout_mode = 0
 offset_left = -99.0
 offset_top = 422.0
@@ -112,7 +124,7 @@ text = "0.00"
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="done" type="Label" parent="Button"]
+[node name="done" type="Label" parent="open"]
 layout_mode = 0
 offset_left = -413.0
 offset_top = 423.0
@@ -124,7 +136,7 @@ text = "0.00"
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="slash" type="Label" parent="Button"]
+[node name="slash" type="Label" parent="open"]
 layout_mode = 0
 offset_left = -260.0
 offset_top = 419.0
@@ -136,18 +148,43 @@ text = "/"
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="cursor" type="ProgressBar" parent="Button"]
+[node name="cursor" type="ProgressBar" parent="open"]
 offset_left = -364.0
 offset_top = 392.0
 offset_right = 39.0
 offset_bottom = 419.0
 show_percentage = false
 
-[connection signal="button_up" from="Button" to="Button" method="_on_button_up"]
-[connection signal="dir_selected" from="Button/fileOpen" to="Button" method="_on_file_open_dir_selected"]
-[connection signal="file_selected" from="Button/fileOpen" to="Button" method="_on_file_open_file_selected"]
-[connection signal="button_up" from="Button/skip" to="Button" method="_on_skip_button_up"]
-[connection signal="button_up" from="Button/pause" to="Button" method="_on_pause_button_up"]
-[connection signal="button_up" from="Button/back" to="Button" method="_on_back_button_up"]
-[connection signal="button_up" from="Button/rewind" to="Button" method="_on_rewind_button_up"]
-[connection signal="button_up" from="Button/forward" to="Button" method="_on_forward_button_up"]
+[node name="close" type="Button" parent="open"]
+layout_mode = 0
+offset_left = -474.0
+offset_top = -4.0
+offset_right = -410.0
+offset_bottom = 60.0
+theme = SubResource("Theme_8odsd")
+theme_override_font_sizes/font_size = 30
+text = "x"
+
+[node name="vol" type="VSlider" parent="open"]
+layout_mode = 0
+offset_left = 98.0
+offset_top = 145.0
+offset_right = 114.0
+offset_bottom = 327.0
+theme = SubResource("Theme_cqwpe")
+min_value = -15.0
+max_value = 10.0
+scrollable = false
+tick_count = 3
+
+[connection signal="gui_input" from="Control" to="Control" method="_on_gui_input"]
+[connection signal="button_up" from="open" to="open" method="_on_button_up"]
+[connection signal="dir_selected" from="open/fileOpen" to="open" method="_on_file_open_dir_selected"]
+[connection signal="file_selected" from="open/fileOpen" to="open" method="_on_file_open_file_selected"]
+[connection signal="button_up" from="open/skip" to="open" method="_on_skip_button_up"]
+[connection signal="button_up" from="open/pause" to="open" method="_on_pause_button_up"]
+[connection signal="button_up" from="open/back" to="open" method="_on_back_button_up"]
+[connection signal="button_up" from="open/rewind" to="open" method="_on_rewind_button_up"]
+[connection signal="button_up" from="open/forward" to="open" method="_on_forward_button_up"]
+[connection signal="button_up" from="open/close" to="open" method="_on_close_button_up"]
+[connection signal="drag_ended" from="open/vol" to="open" method="_on_vol_drag_ended"]

@@ -4,9 +4,13 @@ var songs = []
 var index = 0
 var pos = 0
 var current = [" "]
+var spectrum_analyzer: AudioEffectSpectrumAnalyzerInstance
+var bus_index = AudioServer.get_bus_index("Master")
+var effect = AudioEffectSpectrumAnalyzer.new()
+var bass = 0
 
 func _ready():
-	pass
+	AudioServer.add_bus_effect(bus_index, effect)
 
 func _process(delta):
 	if songs.size() > 0:
@@ -17,6 +21,12 @@ func _process(delta):
 		$cursor.value = $AudioStreamPlayer2D.get_playback_position()
 		$total.text = str(int($AudioStreamPlayer2D.stream.get_length()))
 		$done.text = str(int($AudioStreamPlayer2D.get_playback_position()))
+		
+		spectrum_analyzer = AudioServer.get_bus_effect_instance(bus_index, 0)
+		bass = (spectrum_analyzer.get_magnitude_for_frequency_range(0,250).x + spectrum_analyzer.get_magnitude_for_frequency_range(0,250).y)/2
+		print(bass)
+	
+	$AudioStreamPlayer2D.volume_db = $vol.value
 
 
 func _on_file_open_file_selected(path):
@@ -51,20 +61,22 @@ func _on_file_open_dir_selected(dir):
 
 
 func _on_skip_button_up():
-	index += 1
-	index = clamp(index,0,songs.size() -1)
-	if songs[index].ends_with(".mp3"):
-		load_mp3(songs[index])
-	else:
-		load_ogg(songs[index])
+	if songs.size() > 0:
+		index += 1
+		index = clamp(index,0,songs.size() -1)
+		if songs[index].ends_with(".mp3"):
+			load_mp3(songs[index])
+		else:
+			load_ogg(songs[index])
 
 func _on_back_button_up():
-	index -= 1
-	index = clamp(index,0,songs.size() -1)
-	if songs[index].ends_with(".mp3"):
-		load_mp3(songs[index])
-	else:
-		load_ogg(songs[index])
+	if songs.size() > 0:
+		index -= 1
+		index = clamp(index,0,songs.size() -1)
+		if songs[index].ends_with(".mp3"):
+			load_mp3(songs[index])
+		else:
+			load_ogg(songs[index])
 
 func load_ogg(path):
 	$AudioStreamPlayer2D.stream = AudioStreamOggVorbis.load_from_file(path)
@@ -96,3 +108,11 @@ func _on_forward_button_up():
 
 func _on_rewind_button_up():
 	$AudioStreamPlayer2D.play($AudioStreamPlayer2D.get_playback_position()-10)
+
+
+func _on_close_button_up():
+	get_tree().quit()
+
+
+func _on_vol_drag_ended(value_changed):
+	pass
