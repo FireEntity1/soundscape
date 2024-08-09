@@ -10,6 +10,9 @@ var effect = AudioEffectSpectrumAnalyzer.new()
 var bass = 0
 var advance = true
 var playing
+var loop = false
+
+signal color
 
 # Settings
 var visualize = true
@@ -31,7 +34,8 @@ func _process(delta):
 		spectrum_analyzer = AudioServer.get_bus_effect_instance(bus_index, 0)
 		bass = (spectrum_analyzer.get_magnitude_for_frequency_range(20,80).x + spectrum_analyzer.get_magnitude_for_frequency_range(20,80).y)/2
 
-		if visualize: $modulate.color = Color(1,1-(bass*1.5),1,1)
+		if visualize: $pulse.color = Color(1-(bass*1.5),1-(bass*1.5),1-(bass*1.5),1)
+		else: $pulse.color = Color(1,1,1,1)
 	
 	$AudioStreamPlayer2D.volume_db = $vol.value
 
@@ -55,14 +59,15 @@ func dir_contents(path):
 			else:
 				print("Found file: " + file_name)
 			file_name = dir.get_next()
-		if songs[0].ends_with(".mp3"):
-			load_mp3(songs[index])
-		elif songs[0].ends_with(".ogg"):
-			load_ogg(songs[index])
+		if songs.size() > 0:
+			if songs[0].ends_with(".mp3"):
+				load_mp3(songs[index])
+			elif songs[0].ends_with(".ogg"):
+				load_ogg(songs[index])
 		else:
-			print("ERROR")
+			$playing.text = "No songs found, .mp3 and/or .ogg files must be in the given directory"
 	else:
-		print("An error occurred when trying to access the path.")
+		$playing.text = "Error: Can't access directory"
 
 
 func _on_file_open_dir_selected(dir):
@@ -73,6 +78,8 @@ func _on_skip_button_up():
 	if songs.size() > 0:
 		if shuffle == false:
 			index += 1
+			if index == songs.size():
+				index = 0
 			index = clamp(index,0,songs.size() -1)
 			if songs[index].ends_with(".mp3"):
 				load_mp3(songs[index])
@@ -167,3 +174,47 @@ func _on_settings_id_pressed(id):
 				shuffle = true
 			else:
 				shuffle = false
+		2:
+			color.emit(Color(0.1,0.1,0.2,1))
+		3:
+			color.emit(Color(0.1,0.2,0.1,1))
+		4:
+			color.emit(Color(0.2,0.1,0.1,1))
+		5:
+			color.emit(Color(0.1,0.1,0.1,1))
+		6:
+			color.emit(Color(0.12,0.14,0.18,1))
+
+
+func _on_audio_stream_player_2d_finished():
+	if songs.size() > 0:
+		if loop:
+			$AudioStreamPlayer2D.play(0)
+		elif shuffle == false:
+			index += 1
+			if index == songs.size():
+				index = 0
+			index = clamp(index,0,songs.size() -1)
+			if songs[index].ends_with(".mp3"):
+				load_mp3(songs[index])
+			else:
+				load_ogg(songs[index])
+		elif shuffle:
+			index = randi_range(0,songs.size()-1)
+			if songs[index].ends_with(".mp3"):
+				load_mp3(songs.pick_random())
+			else:
+				load_ogg(songs.pick_random())
+
+
+func _on_loop_toggled(toggled_on):
+	if toggled_on:
+		loop = true
+		$loop.modulate.b = 0
+		$loop.modulate.r = 0
+		$loop.modulate.g = 1
+	elif not toggled_on:
+		loop = false
+		$loop.modulate.b = 1
+		$loop.modulate.r = 1
+		$loop.modulate.g = 1

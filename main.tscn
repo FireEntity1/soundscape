@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://c1leqgnp5o7sh"]
+[gd_scene load_steps=10 format=3 uid="uid://c1leqgnp5o7sh"]
 
 [ext_resource type="Script" path="res://Control.gd" id="1_g5o7u"]
 [ext_resource type="Script" path="res://openFile.gd" id="1_nww2s"]
+[ext_resource type="Script" path="res://Color.gd" id="1_wk1k7"]
 
 [sub_resource type="Theme" id="Theme_6w4j0"]
 
@@ -22,7 +23,8 @@ offset_left = -6.0
 offset_top = -2.0
 offset_right = 649.0
 offset_bottom = 645.0
-color = Color(0.149205, 0.168383, 0.187543, 1)
+color = Color(0.12, 0.14, 0.18, 1)
+script = ExtResource("1_wk1k7")
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
@@ -179,7 +181,19 @@ max_value = 10.0
 scrollable = false
 tick_count = 3
 
-[node name="modulate" type="CanvasModulate" parent="open"]
+[node name="loop" type="Button" parent="open"]
+layout_mode = 0
+offset_left = 87.0
+offset_top = 455.0
+offset_right = 148.0
+offset_bottom = 491.0
+theme = SubResource("Theme_q3f88")
+theme_override_font_sizes/font_size = 20
+toggle_mode = true
+button_pressed = true
+text = "loop"
+
+[node name="pulse" type="CanvasModulate" parent="open"]
 position = Vector2(-484, -12)
 
 [node name="settings" type="PopupMenu" parent="open"]
@@ -188,7 +202,7 @@ size = Vector2i(200, 300)
 theme_override_font_sizes/font_size = 25
 hide_on_item_selection = false
 hide_on_checkable_item_selection = false
-item_count = 2
+item_count = 8
 item_0/text = "Visualize"
 item_0/checkable = 1
 item_0/checked = true
@@ -196,6 +210,19 @@ item_0/id = 0
 item_1/text = "Shuffle"
 item_1/checkable = 1
 item_1/id = 1
+item_2/text = "THEMES"
+item_2/id = 10
+item_2/separator = true
+item_3/text = "Blue"
+item_3/id = 2
+item_4/text = "Green"
+item_4/id = 3
+item_5/text = "Red"
+item_5/id = 4
+item_6/text = "Grey"
+item_6/id = 5
+item_7/text = "Default"
+item_7/id = 6
 
 [node name="settingsButton" type="Button" parent="open"]
 layout_mode = 0
@@ -209,8 +236,10 @@ text = "⚙"
 
 [connection signal="gui_input" from="Control" to="Control" method="_on_gui_input"]
 [connection signal="button_up" from="open" to="open" method="_on_button_up"]
+[connection signal="color" from="open" to="ColorRect" method="_on_open_color"]
 [connection signal="dir_selected" from="open/fileOpen" to="open" method="_on_file_open_dir_selected"]
 [connection signal="file_selected" from="open/fileOpen" to="open" method="_on_file_open_file_selected"]
+[connection signal="finished" from="open/AudioStreamPlayer2D" to="open" method="_on_audio_stream_player_2d_finished"]
 [connection signal="button_up" from="open/skip" to="open" method="_on_skip_button_up"]
 [connection signal="button_up" from="open/pause" to="open" method="_on_pause_button_up"]
 [connection signal="button_up" from="open/back" to="open" method="_on_back_button_up"]
@@ -219,5 +248,6 @@ text = "⚙"
 [connection signal="drag_ended" from="open/cursor" to="open" method="_on_cursor_drag_ended"]
 [connection signal="drag_started" from="open/cursor" to="open" method="_on_cursor_drag_started"]
 [connection signal="button_up" from="open/close" to="open" method="_on_close_button_up"]
+[connection signal="toggled" from="open/loop" to="open" method="_on_loop_toggled"]
 [connection signal="id_pressed" from="open/settings" to="open" method="_on_settings_id_pressed"]
 [connection signal="button_up" from="open/settingsButton" to="open" method="_on_settings_button_button_up"]
